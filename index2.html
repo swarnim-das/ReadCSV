@@ -1,5 +1,4 @@
-<!doctype
-html>
+<!doctype html>
 
 <html>
 
@@ -7,21 +6,18 @@ html>
 
 <style>
 
-.bar {
+    .bar {
 
-fill:
-red;
+    fill:
+    red;
 
-}
+    }
 
 </style>
 
-<script
-src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
 
 <body>
-
-
 
 <h2>Make a area chart of Urban population
  growth (annual %) for India over the years supplied </h2>
@@ -31,112 +27,61 @@ src="https://d3js.org/d3.v4.min.js"></script>
 
 <script>
 
-
-
-var svg =
-    d3.select("svg"),
-
-margin = 200,
+var svg = d3.select("svg"),margin = 200,
 
 width = svg.attr("width") - margin,
 
-height = svg.attr("height")
- - margin
-
-
+height = svg.attr("height")- margin;
 
 svg.append("text")
 
-.attr("transform",
-"translate(100,0)")
-
-.attr("x",
-50)
-
-.attr("y",
-50)
-
-.attr("font-size",
-"24px")
-
+.attr("transform","translate(100,0)")
+.attr("x",50)
+.attr("y",50)
+.attr("font-size","24px")
 .text("Urban population growth (annual %)");
 
-
-
-var
-xScale =
-d3.scaleBand().range([,
+var xScale = d3.scaleBand().range([,
 width]).padding(0.4),
 
-yScale =
-d3.scaleLinear().range([height,
+yScale = d3.scaleLinear().range([height,
 ]);
 
-
-
-var
-g =
-svg.append("g")
-
-.attr("transform",
-"translate(" +
-100 +
+var g = svg.append("g")
+.attr("transform","translate(" +100 +
 "," +
 100 +
 ")");
 
+d3.json("output2.json", function(error, data) {
+    if (error) {
+        throw error;
+    }
 
+    xScale.domain(data.map(function(d) { 
+        return d.year; 
+    }));
 
-d3.json("output2.json",
-function(error,
-data) {
-
-if (error) {
-
-throw
-error;
-
-}
-
-
-
-xScale.domain(data.map(function(d)
- { return
-d.year; }));
-
-yScale.domain([,d3.max(data, function(d) {
-return
-    d["growth_val"]; 
-})]);
-
+    yScale.domain([,d3.max(data, function(d) {
+        return d["growth_val"]; 
+    })]);
 
 
 g.append("g")
-
 .attr("transform","translate(0," + height + ")")
-
 .call(d3.axisBottom(xScale))
-
 .append("text")
-
 .attr("y",height - 250)
-
 .attr("x", width - 100)
-
 .attr("text-anchor","end")
-
 .attr("stroke", "black")
-
 .text("Year");
-
-
 
 g.append("g")
 
 .call(d3.axisLeft(yScale).tickFormat(function(d){
 
-return
-d;
+    return d;
 
 })
 
@@ -155,10 +100,6 @@ d;
 .attr("stroke", "black")
 
 .text("growth percentage");
-
-
-
-
 
 g.selectAll(".bar")
 
@@ -181,9 +122,7 @@ xScale.bandwidth())
 
 .attr("height",
 function(d) {
-return
-height -
-yScale(d["growth_val"]); });
+return height - yScale(d["growth_val"]); });
 
 });
 

@@ -21,7 +21,7 @@ let newArrayAsia = [];
 let arr_urban = [];
 let arr_rural = [];
 let arr_ur_growth = [];
-let asia = ["PAK","IND","BGD","IDN","CHN","AFG"];
+//let asia = ["PAK","IND","BGD","IDN","CHN","AFG"];
 let countries=['India','Afghanistan','Armenia','Azerbaijan','Bahrain','Bangladesh','Bhutan','Brunei'
 ,'Cambodia','China','Cyprus','Georgia','Indonesia','Iran','Iraq','Israel','Japan','Jordan','Kazakhstan'
 ,'Kyrgyzstan','Laos','Lebanon','Malaysia','Maldives','Mongolia','Myanmar','Nepal','North Korea','Oman'
@@ -104,19 +104,21 @@ rl.on('line', (line)=>{
 
     for(let i=0;i<countries.length;i++) {
         if(countries[i]===filteredArray[indexCountry]) {
-            if(filteredArray[indexIndicatorCode]==="SP.RUR.TOTL") {
-                let outobj = {
-                    country: filteredArray[indexCountry],
-                    rur_val: filteredArray[indexValue]
+            if(filteredArray[indexYear] === "2000") {
+                if(filteredArray[indexIndicatorCode]==="SP.RUR.TOTL") {
+                    let outobj = {
+                        country: filteredArray[indexCountry],
+                        rur_val: filteredArray[indexValue]
+                    }
+                    asia_rur.push(outobj);
                 }
-                asia_rur.push(outobj);
-            }
-            else if(filteredArray[indexIndicatorCode]==="SP.URB.TOTL") {
-                let outobj = {
-                    country: filteredArray[indexCountry],
-                    urb_val: filteredArray[indexValue]
+                else if(filteredArray[indexIndicatorCode]==="SP.URB.TOTL") {
+                    let outobj = {
+                        country: filteredArray[indexCountry],
+                        urb_val: filteredArray[indexValue]
+                    }
+                    asia_urb.push(outobj);
                 }
-                asia_urb.push(outobj);
             }                        
         }
     }
@@ -139,8 +141,7 @@ console.log("here.....")
             if(i===j){
                 let temp_Obj = Object.assign(asia_rur[j],asia_urb[j]);
                 AsiaArray.push(temp_Obj);
-            }
-            
+            }            
         }
     }
 
