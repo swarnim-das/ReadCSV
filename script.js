@@ -1,4 +1,5 @@
 var assign = require("./objectAssign");
+var createJSON = require("./writeJSON");
 
 /**********  variable to store CSV File   *********/
 const csvFile = "./Indicators.csv";
@@ -121,7 +122,6 @@ rl.on('line', (line)=>{
         }
     }
 
-
 }).on('close', () => {
 console.log("here.....")
 
@@ -135,29 +135,9 @@ console.log("here.....")
     var myJSON = JSON.stringify(indiaPopulationArray, 1,1);
     var myJSON2 = JSON.stringify(indiaPopulationGrowthArray, 1, 1);
     var myJSON3 = JSON.stringify(asiaArray, 1, 1);
-    fs.writeFile("./output/indiaPopulationArray.json", myJSON, 'utf8', function (err) {
-        if (err) {
-            console.log("An error occured while writing JSON Object to File.");
-            return console.log(err);
-        }
 
-        console.log("JSON file indiaPopulationArray has been saved.");
-    });
-    fs.writeFile("./output/indiaPopulationGrowthArray.json", myJSON2, 'utf8', function (err) {
-        if (err) {
-            console.log("An error occured while writing JSON Object to File.");
-            return console.log(err);
-        }
-
-        console.log("JSON indiaPopulationGrowthArray has been saved.");
-    });
-    fs.writeFile("./output/asiaArray.json", myJSON3, 'utf8', function (err) {
-        if (err) {
-            console.log("An error occured while writing JSON Object to File.");
-            return console.log(err);
-        }
-
-        console.log("JSON asiaArray has been saved.");
-    });
+    createJSON.write(fs,myJSON,"indiaPopulationArray.json");
+    createJSON.write(fs,myJSON2,"indiaPopulationGrowthArray.json");
+    createJSON.write(fs,myJSON3,"asiaArray.json");
 
 });
