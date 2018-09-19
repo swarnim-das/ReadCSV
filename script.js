@@ -1,3 +1,5 @@
+var assign = require("./objectAssign");
+
 /**********  variable to store CSV File   *********/
 const csvFile = "./Indicators.csv";
 
@@ -10,18 +12,16 @@ let indexYear;
 let indexCountry;
 let indexValue;
 let indexIndicatorCode;
-let indexCountryCode;
 
 /**********  Array variable to store Filtered Array of Objects  *********/
-let newArray = [];
-let newArrayGrowth = [];
-let newArrayAsia = [];
+let indiaPopulationArray = [];
+let indiaPopulationGrowthArray = [];
 
 /**********  Array variables to store specific Objects ********/
-let arr_urban = [];
-let arr_rural = [];
+let indiaUrban = [];
+let indiaRural = [];
 let arr_ur_growth = [];
-let asia = ["PAK","IND","BGD","IDN","CHN","AFG"];
+
 let countries=['India','Afghanistan','Armenia','Azerbaijan','Bahrain','Bangladesh','Bhutan','Brunei'
 ,'Cambodia','China','Cyprus','Georgia','Indonesia','Iran','Iraq','Israel','Japan','Jordan','Kazakhstan'
 ,'Kyrgyzstan','Laos','Lebanon','Malaysia','Maldives','Mongolia','Myanmar','Nepal','North Korea','Oman'
@@ -29,9 +29,9 @@ let countries=['India','Afghanistan','Armenia','Azerbaijan','Bahrain','Banglades
 ,'Sri Lanka','Syria','Taiwan','Tajikistan','Thailand','Timor-Leste','Turkey','Turkmenistan'
 ,'United Arab Emirates','Uzbekistan','Vietnam','Yemen'];
 
-let asia_rur = [];
-let asia_urb = [];
-let AsiaArray = [];
+let asiaRural = [];
+let asiaUrban = [];
+let asiaArray = [];
 
 let cn = 0;
 /**********  counter variable for  storing header indexes   *********/
@@ -74,49 +74,49 @@ rl.on('line', (line)=>{
 
         if(filteredArray[indexIndicatorCode] === "SP.RUR.TOTL.ZS") {
             
-            let temp_obj = {
+            let tempObj = {
                 year: filteredArray[indexYear],
                 rur_pop: filteredArray[indexValue],
             };
             
-            arr_rural.push(temp_obj);
+            indiaRural.push(tempObj);
 
         }
         else if(filteredArray[indexIndicatorCode] === "SP.URB.TOTL.IN.ZS"){
             
-            let temp_obj = {
+            let tempObj = {
                 year: filteredArray[indexYear],
                 urb_pop: filteredArray[indexValue],
             };
 
-            arr_urban.push(temp_obj);
+            indiaUrban.push(tempObj);
 
         }
         else if(filteredArray[indexIndicatorCode] === "SP.URB.GROW"){
-            let temp_obj = {
+            let tempObj = {
                 year: filteredArray[indexYear],
                 growth_val: filteredArray[indexValue]
             }
             
-            arr_ur_growth.push(temp_obj);
+            arr_ur_growth.push(tempObj);
         }
     }
 
     for(let i=0;i<countries.length;i++) {
         if(countries[i]===filteredArray[indexCountry]) {
             if(filteredArray[indexIndicatorCode]==="SP.RUR.TOTL") {
-                let outobj = {
+                let tempObj = {
                     country: filteredArray[indexCountry],
                     rur_val: filteredArray[indexValue]
                 }
-                asia_rur.push(outobj);
+                asiaRural.push(tempObj);
             }
             else if(filteredArray[indexIndicatorCode]==="SP.URB.TOTL") {
-                let outobj = {
+                let tempObj = {
                     country: filteredArray[indexCountry],
                     urb_val: filteredArray[indexValue]
                 }
-                asia_urb.push(outobj);
+                asiaUrban.push(tempObj);
             }                        
         }
     }
@@ -124,77 +124,40 @@ rl.on('line', (line)=>{
 
 }).on('close', () => {
 console.log("here.....")
-    for(i=0;i<arr_rural.length;i++) {
-        for(j=0;j<arr_urban.length;j++) {
-            if(i===j) {
-                let temp_Obj = Object.assign(arr_rural[j],arr_urban[j]);
-                /**********  pushing the objects to Array of Objects  *********/
-                newArray.push(temp_Obj);
-            }
-        }
-    }
 
-    for(i=0;i<asia_rur.length;i++){
-        for(j=0;j<asia_urb.length;j++){
-            if(i===j){
-                let temp_Obj = Object.assign(asia_rur[j],asia_urb[j]);
-                AsiaArray.push(temp_Obj);
-            }
-            
-        }
-    }
 
-    // for(i=0;i<asia_rur.length;i++){
-    //     for(j=0;j<asia_urb.length;j++){
-    //         if(i===j){
-    //             let temp_obj = {
-    //                 country: countries[i],
-    //                 rur_pop: asia_rur[i],
-    //                 urb_pop: asia_urb[i]
-    //             }
-    //             newArrayAsia.push(temp_obj);
-    //         }
-            
-    //     }
-    // }
+    assign.arrayMerge(indiaRural,indiaUrban,indiaPopulationArray);
+    assign.arrayMerge(asiaRural,asiaUrban,asiaArray);
 
-    // for(i=0;i<asia.length;i++){
-    //     let temp_obj = {
-    //         country: asia[i],
-    //         population: asia_rur[i] + asia_urb[i]
-    //     }
-    //     //console.log(temp_obj);
-    //     newArrayAsia.push(temp_obj);
-    // }
+    indiaPopulationGrowthArray = arr_ur_growth;
 
-    newArrayGrowth = arr_ur_growth;
     /**********  creating JSON file from Array of Objects  *********/
-    var myJSON = JSON.stringify(newArray, 1,1);
-    var myJSON2 = JSON.stringify(newArrayGrowth, 1, 1);
-    var myJSON3 = JSON.stringify(AsiaArray, 1, 1);
-    fs.writeFile("output.json", myJSON, 'utf8', function (err) {
+    var myJSON = JSON.stringify(indiaPopulationArray, 1,1);
+    var myJSON2 = JSON.stringify(indiaPopulationGrowthArray, 1, 1);
+    var myJSON3 = JSON.stringify(asiaArray, 1, 1);
+    fs.writeFile("./output/indiaPopulationArray.json", myJSON, 'utf8', function (err) {
         if (err) {
             console.log("An error occured while writing JSON Object to File.");
             return console.log(err);
         }
 
-        console.log("JSON file1 has been saved.");
+        console.log("JSON file indiaPopulationArray has been saved.");
     });
-    fs.writeFile("output2.json", myJSON2, 'utf8', function (err) {
+    fs.writeFile("./output/indiaPopulationGrowthArray.json", myJSON2, 'utf8', function (err) {
         if (err) {
             console.log("An error occured while writing JSON Object to File.");
             return console.log(err);
         }
 
-        console.log("JSON file2 has been saved.");
+        console.log("JSON indiaPopulationGrowthArray has been saved.");
     });
-    fs.writeFile("output3.json", myJSON3, 'utf8', function (err) {
+    fs.writeFile("./output/asiaArray.json", myJSON3, 'utf8', function (err) {
         if (err) {
             console.log("An error occured while writing JSON Object to File.");
             return console.log(err);
         }
 
-        console.log("JSON file3 has been saved.");
+        console.log("JSON asiaArray has been saved.");
     });
 
 });
