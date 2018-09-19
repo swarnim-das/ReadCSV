@@ -1,5 +1,6 @@
 var labelWithTime = "label " + Date.now();
 console.time(labelWithTime);
+
 const fs = require('fs');
 const readline = require('readline');
 const createJSON = require("./writeJSON");
@@ -27,12 +28,10 @@ let countries=['India','Afghanistan','Armenia','Azerbaijan','Bahrain','Banglades
 
 let counter = 0;
 
-/**********  Reading CSV File by creating Read Stream Interface   *********/
 const rl = readline.createInterface({
     input: fs.createReadStream(inputFile)
 });
 
-/**********  Reading the Stream Line by Line *********/
 rl.on('line', (line)=> {
 
     counter++;
