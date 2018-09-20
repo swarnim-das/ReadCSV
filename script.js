@@ -46,15 +46,25 @@ rl.on('line', (line)=> {
 
     indiaPopulationObject = indiaPopulationGrowthPercentage(filteredArray, indexObj, indiaPopulationObject);
     asiaPopulationObject = asiaPopulationData(filteredArray, indexObj, countries, asiaPopulationObject);
-    indiaPopulationUrbanGrowthObject = indiaUrbanPopulationGrowth(filteredArray,indexObj,indiaPopulationUrbanGrowthObject);
-    console.log(indiaPopulationUrbanGrowthObject);
+    // indiaPopulationUrbanGrowthObject = indiaUrbanPopulationGrowth(filteredArray,indexObj,indiaPopulationUrbanGrowthObject);
+    // console.log(indiaPopulationUrbanGrowthObject);
+
+    if(filteredArray[indexObj.indexCountry] === "India"){
+        if(filteredArray[indexObj.indexIndicatorCode] === "SP.URB.GROW") {
+            let tempObj = {
+                year: filteredArray[indexObj.indexYear],
+                growth_value: filteredArray[indexObj.indexValue]
+            }
+            indiaPopulationUrbanGrowth.push(tempObj);   
+        }    
+    }
 }).on('close', () => {
 
     indiaPopulationArray = Object.values(indiaPopulationObject);
     asiaPopulation = Object.values(asiaPopulationObject);
 
     createJSON.write(fs,JSON.stringify(indiaPopulationArray, 1,1),"indiaPopulation.json");
-    createJSON.write(fs,JSON.stringify(indiaPopulationUrbanGrowth, 1, 1),"indiaPopulationGrowth.json");
+    createJSON.write(fs,JSON.stringify(indiaPopulationUrbanGrowth, 1, 1),"indiaUrbanPopulationGrowth.json");
     createJSON.write(fs,JSON.stringify(asiaPopulation, 1, 1),"asiaCountries.json");
 
     console.timeEnd(labelWithTime);
