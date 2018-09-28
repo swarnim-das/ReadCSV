@@ -1,0 +1,7 @@
+Rural population (% of total population), SP.RUR.TOTL.ZS
+Urban population (% of total), SP.URB.TOTL.IN.ZS
+
+Rural population,SP.RUR.TOTL
+Urban population,SP.URB.TOTL
+
+Urban population growth (annual %),SP.URB.GROW
